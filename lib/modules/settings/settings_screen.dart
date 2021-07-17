@@ -19,9 +19,9 @@ class SettingsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocConsumer<HomeCubit, HomeStates>(
       listener: (context, state) {
-        if(state is HomeGetUserSuccessState){
-          HomeCubit.get(context).getUserdata();
-        }
+        // if(state is HomeGetUserSuccessState){
+        //   HomeCubit.get(context).getUserdata();
+        // }
       },
       builder: (context, state) {
 
@@ -182,7 +182,6 @@ class SettingsScreen extends StatelessWidget {
                 child: defaultTextButton(
                   function: ()
                   {
-                    // homeCubit.signOut(context);
                     signOut(context);
                   },
                   text: 'sign out',

@@ -1,10 +1,15 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:social_app/modules/login/login_screen.dart';
 import 'package:social_app/shared/components/components.dart';
+import 'package:social_app/shared/cubit/home_cubit/home_cubit.dart';
 import 'package:social_app/shared/network/local/cache_helper.dart';
 
 void signOut(context) {
-  CacheHelper.removeData(key: 'uId').then((value) {
-    navigateAndFinish(context, LoginScreen());
+  FirebaseAuth.instance.signOut().then((value) {
+    CacheHelper.removeData(key: 'uId').then((value) {
+      HomeCubit.get(context).currentIndex = 0;
+      navigateAndFinish(context, LoginScreen());
+    });
   });
 }
 

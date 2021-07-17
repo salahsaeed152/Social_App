@@ -6,6 +6,7 @@ import 'package:social_app/layouts/home_layout.dart';
 import 'package:social_app/modules/register/register_screen.dart';
 import 'package:social_app/shared/components/components.dart';
 import 'package:social_app/shared/components/constants.dart';
+import 'package:social_app/shared/cubit/home_cubit/home_cubit.dart';
 import 'package:social_app/shared/cubit/login_cubit/login_cubit.dart';
 import 'package:social_app/shared/cubit/login_cubit/login_states.dart';
 import 'package:social_app/shared/network/local/cache_helper.dart';
@@ -38,6 +39,8 @@ class LoginScreen extends StatelessWidget {
                 context,
                 HomeLayout(),
               );
+              HomeCubit.get(context).getUserdata();
+              HomeCubit.get(context).getPosts();
             }).catchError((error) {
               print(error.toString());
             });

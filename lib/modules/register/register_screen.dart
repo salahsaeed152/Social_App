@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:social_app/layouts/home_layout.dart';
 import 'package:social_app/shared/components/components.dart';
 import 'package:social_app/shared/components/constants.dart';
+import 'package:social_app/shared/cubit/home_cubit/home_cubit.dart';
 import 'package:social_app/shared/cubit/register_cubit/register_cubit.dart';
 import 'package:social_app/shared/cubit/register_cubit/register_states.dart';
 import 'package:social_app/shared/network/local/cache_helper.dart';
@@ -33,6 +34,8 @@ class RegisterScreen extends StatelessWidget {
                 context,
                 HomeLayout(),
               );
+              HomeCubit.get(context).getUserdata();
+              HomeCubit.get(context).getPosts();
             }).catchError((error) {
               print(error.toString());
             });

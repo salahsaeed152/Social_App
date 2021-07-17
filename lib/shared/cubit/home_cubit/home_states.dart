@@ -98,4 +98,3 @@ class HomeSendMessageErrorState extends HomeStates{
 //get all message states
 class HomeGetAllMessageSuccessState extends HomeStates{}
 
-class HomeSignOutSuccessState extends HomeStates{}

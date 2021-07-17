@@ -2,7 +2,6 @@ import 'package:conditional_builder/conditional_builder.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:social_app/models/post_model.dart';
-import 'package:social_app/shared/components/components.dart';
 import 'package:social_app/shared/cubit/home_cubit/home_cubit.dart';
 import 'package:social_app/shared/cubit/home_cubit/home_states.dart';
 import 'package:social_app/shared/styles/colors.dart';
@@ -61,10 +60,7 @@ class FeedsScreen extends StatelessWidget {
                 ],
               ),
             ),
-            fallback: (context) => loading(
-              context,
-              'Loading...',
-            ),
+            fallback: (context) => Center(child: CircularProgressIndicator()),
           );
         },
     );

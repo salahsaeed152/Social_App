@@ -1,4 +1,3 @@
-import 'package:conditional_builder/conditional_builder.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:social_app/models/message_model.dart';
@@ -46,95 +45,156 @@ class ChatDetailsScreen extends StatelessWidget {
                   ],
                 ),
               ),
-              body: ConditionalBuilder(
-                condition: homeCubit.messages.length > 0,
-                builder: (context) => Padding(
-                  padding: const EdgeInsets.all(20.0),
-                  child: Form(
-                    key: globalKey,
-                    child: Column(
-                      children: [
-                        Expanded(
-                          child: ListView.separated(
-                            physics: BouncingScrollPhysics(),
-                            itemBuilder: (context, index) {
-                              var message = homeCubit.messages[index];
+              body: homeCubit.messages.length > 0
+                  ? Padding(
+                      padding: const EdgeInsets.all(20.0),
+                      child: Form(
+                        key: globalKey,
+                        child: Column(
+                          children: [
+                            Expanded(
+                              child: ListView.separated(
+                                physics: BouncingScrollPhysics(),
+                                itemBuilder: (context, index) {
+                                  var message = homeCubit.messages[index];
 
-                              if (homeCubit.userLoginModel.uId ==
-                                  message.senderId) {
-                                return buildMyMessageItem(message);
-                              } else {
-                                return buildMessageItem(message);
-                              }
-                            },
-                            separatorBuilder: (context, index) =>
-                                SizedBox(height: 15.0),
-                            itemCount: homeCubit.messages.length,
-                          ),
-                        ),
-                        Container(
-                          decoration: BoxDecoration(
-                            border: Border.all(
-                              color: Colors.grey[300],
-                              width: 1.0,
+                                  if (homeCubit.userLoginModel.uId ==
+                                      message.senderId) {
+                                    return buildMyMessageItem(message);
+                                  } else {
+                                    return buildMessageItem(message);
+                                  }
+                                },
+                                separatorBuilder: (context, index) =>
+                                    SizedBox(height: 15.0),
+                                itemCount: homeCubit.messages.length,
+                              ),
                             ),
-                            borderRadius: BorderRadius.circular(15.0),
-                          ),
-                          clipBehavior: Clip.antiAliasWithSaveLayer,
-                          child: Row(
-                            children: [
-                              Expanded(
-                                child: TextFormField(
-                                  controller: messageController,
-                                  validator: (String value) {
-                                    if (value.isEmpty) {
-                                      showToast(
-                                        state: ToastState.ERROR,
-                                        message: 'message can\'t be empty',
-                                      );
-                                      return '';
-                                    }
-                                    return null;
-                                  },
-                                  decoration: InputDecoration(
-                                    border: InputBorder.none,
-                                    hintText: 'type your message here ...',
-                                  ),
+                            Container(
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                  color: Colors.grey[300],
+                                  width: 1.0,
                                 ),
+                                borderRadius: BorderRadius.circular(15.0),
                               ),
-                              Container(
-                                height: 50.0,
-                                color: defaultColor,
-                                child: MaterialButton(
-                                  onPressed: () {
-                                    if (globalKey.currentState.validate()) {
-                                      homeCubit.sendMessage(
-                                        receiverId: userModel.uId,
-                                        dateTime: DateTime.now().toString(),
-                                        text: messageController.text,
-                                      );
-                                      messageController.clear();
-                                    }
-                                  },
-                                  minWidth: 1.0,
-                                  child: Icon(
-                                    IconBroken.Send,
-                                    size: 16.0,
-                                    color: Colors.white,
+                              clipBehavior: Clip.antiAliasWithSaveLayer,
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                    child: TextFormField(
+                                      controller: messageController,
+                                      validator: (String value) {
+                                        if (value.isEmpty) {
+                                          showToast(
+                                            state: ToastState.ERROR,
+                                            message: 'message can\'t be empty',
+                                          );
+                                          return '';
+                                        }
+                                        return null;
+                                      },
+                                      decoration: InputDecoration(
+                                        border: InputBorder.none,
+                                        hintText: 'type your message here ...',
+                                      ),
+                                    ),
                                   ),
-                                ),
+                                  Container(
+                                    height: 50.0,
+                                    color: defaultColor,
+                                    child: MaterialButton(
+                                      onPressed: () {
+                                        if (globalKey.currentState.validate()) {
+                                          homeCubit.sendMessage(
+                                            receiverId: userModel.uId,
+                                            dateTime: DateTime.now().toString(),
+                                            text: messageController.text,
+                                          );
+                                          messageController.clear();
+                                        }
+                                      },
+                                      minWidth: 1.0,
+                                      child: Icon(
+                                        IconBroken.Send,
+                                        size: 16.0,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ),
+                                ],
                               ),
-                            ],
-                          ),
+                            ),
+                          ],
                         ),
-                      ],
+                      ),
+                    )
+                  : Padding(
+                    padding: const EdgeInsets.all(20.0),
+                    child: Form(
+                      key: globalKey,
+                      child: Column(
+                          children: [
+                            Expanded(child: Text('start chat')),
+                            Container(
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                  color: Colors.grey[300],
+                                  width: 1.0,
+                                ),
+                                borderRadius: BorderRadius.circular(15.0),
+                              ),
+                              clipBehavior: Clip.antiAliasWithSaveLayer,
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                    child: TextFormField(
+                                      controller: messageController,
+                                      validator: (String value) {
+                                        if (value.isEmpty) {
+                                          showToast(
+                                            state: ToastState.ERROR,
+                                            message: 'message can\'t be empty',
+                                          );
+                                          return '';
+                                        }
+                                        return null;
+                                      },
+                                      decoration: InputDecoration(
+                                        border: InputBorder.none,
+                                        hintText: 'type your message here ...',
+                                      ),
+                                    ),
+                                  ),
+                                  Container(
+                                    height: 50.0,
+                                    color: defaultColor,
+                                    child: MaterialButton(
+                                      onPressed: () {
+                                        if (globalKey.currentState.validate()) {
+                                          homeCubit.sendMessage(
+                                            receiverId: userModel.uId,
+                                            dateTime: DateTime.now().toString(),
+                                            text: messageController.text,
+                                          );
+                                          messageController.clear();
+                                        }
+                                      },
+                                      minWidth: 1.0,
+                                      child: Icon(
+                                        IconBroken.Send,
+                                        size: 16.0,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
                     ),
                   ),
-                ),
-                fallback: (context) => Center(
-                  child: Text('Go chat with ${userModel.name}'),
-                ),
-              ),
             );
           },
         );

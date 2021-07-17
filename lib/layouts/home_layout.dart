@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:social_app/modules/new_post/new_post_screen.dart';
-import 'package:social_app/shared/components/components.dart';
 import 'package:social_app/shared/cubit/home_cubit/home_cubit.dart';
 import 'package:social_app/shared/cubit/home_cubit/home_states.dart';
 import 'package:social_app/shared/styles/icon_broken.dart';
@@ -11,9 +9,9 @@ class HomeLayout extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocConsumer<HomeCubit, HomeStates>(
       listener: (context, state) {
-        if(state is HomeNewPostNavState) {
-          navigateTo(context, NewPostScreen());
-        }
+        // if(state is HomeNewPostNavState) {
+        //   navigateTo(context, NewPostScreen());
+        // }
       },
       builder: (context, state) {
         HomeCubit homeCubit = HomeCubit.get(context);
@@ -36,7 +34,8 @@ class HomeLayout extends StatelessWidget {
           bottomNavigationBar: BottomNavigationBar(
             currentIndex: homeCubit.currentIndex,
             onTap: (index) {
-              homeCubit.changeBottom(index);
+              homeCubit.changeBottom(index, context);
+              print(homeCubit.currentIndex);
             },
             items: [
               BottomNavigationBarItem(

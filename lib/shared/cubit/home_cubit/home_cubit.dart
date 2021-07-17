@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:bloc/bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
@@ -11,7 +10,6 @@ import 'package:social_app/models/post_model.dart';
 import 'package:social_app/models/user_model.dart';
 import 'package:social_app/modules/chats/chat_screen.dart';
 import 'package:social_app/modules/feeds/feeds_screen.dart';
-import 'package:social_app/modules/login/login_screen.dart';
 import 'package:social_app/modules/new_post/new_post_screen.dart';
 import 'package:social_app/modules/settings/settings_screen.dart';
 import 'package:social_app/modules/users/users_screen.dart';
@@ -19,7 +17,6 @@ import 'package:social_app/shared/components/components.dart';
 import 'package:social_app/shared/components/constants.dart';
 import 'package:social_app/shared/cubit/home_cubit/home_states.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
-import 'package:social_app/shared/network/local/cache_helper.dart';
 
 class HomeCubit extends Cubit<HomeStates> {
   HomeCubit() : super(HomeInitialState());
@@ -61,14 +58,30 @@ class HomeCubit extends Cubit<HomeStates> {
     'Settings',
   ];
 
-  void changeBottom(int index)
+  void changeBottom(int index, BuildContext context)
   {
-    if (index == 1) getAllUsers();
-    // if (index == 2) getUserdata();
+    if (index == 0) {
+      getPosts();
+      currentIndex = index;
+      emit(HomeChangeBottomNavState());
+    }
+    if (index == 1) {
+      getAllUsers();
+      currentIndex = index;
+      emit(HomeChangeBottomNavState());
+    }
     // check if index = 2 navigate to AddNewPostScreen else change navBottomScreens
-    if (index == 2)
-      emit(HomeNewPostNavState());
-    else {
+    if (index == 2){
+      navigateTo(context, NewPostScreen());
+      currentIndex = index;
+      // emit(HomeNewPostNavState());
+    }
+    if(index == 3) {
+      currentIndex = index;
+      emit(HomeChangeBottomNavState());
+    }
+    if(index == 4) {
+      getUserdata();
       currentIndex = index;
       emit(HomeChangeBottomNavState());
     }
@@ -277,21 +290,21 @@ class HomeCubit extends Cubit<HomeStates> {
   List<String> likesIds = [];
 
   void getPosts() {
+    emit(HomeGetPostsLoadingState());
+    if(posts.length == 0)
     FirebaseFirestore.instance.collection('posts').get().then((value) {
       value.docs.forEach((element) {
+        //get post data
         element.reference.collection('likes').get().then((value) {
-          //get post id
-          postsIds.add(element.id);
-          //get post data
-          posts.add(PostModel.fromJson(element.data()));
           //get post likes
           likesNumber.add(value.docs.length);
-
           value.docs.forEach((element) {
             likesIds.add(element.id);
           });
+          posts.add(PostModel.fromJson(element.data()));
+          //get post id
+          postsIds.add(element.id);
 
-          // print(likesIds);
         }).catchError((error) {
           print(error.toString());
         });
@@ -317,20 +330,11 @@ class HomeCubit extends Cubit<HomeStates> {
     });
   }
 
-  void signOut(context) {
-    FirebaseAuth.instance.signOut().then((value) {
-      CacheHelper.removeData(key: 'uId').then((value) {
-        navigateAndFinish(context, LoginScreen());
-      });
-      emit(HomeSignOutSuccessState ());
-    });
-  }
-
   List<UserModel> allUsers = [];
 
   void getAllUsers() {
     emit(HomeGetAllUsersLoadingState());
-    if (allUsers.length == 0)
+      allUsers = [];
       FirebaseFirestore.instance.collection('users').get().then((value) {
         value.docs.forEach((element) {
           if (element.data()['uId'] != userLoginModel.uId)
